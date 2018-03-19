@@ -1,6 +1,6 @@
 {
-  "name": "demo-presenter",
-  "main": "demo-presenter.html",
+  "name": "oak-demo",
+  "main": "oak-demo.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0"
   },
