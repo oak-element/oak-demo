@@ -1,21 +1,13 @@
-# \<demo-presenter\>
+# \<oak-demo-snippet\>
 
+This component provide a way to write demo snippet embed into web components and show the proper Polymer synthax for binding and event methods.
 
+Be carefull to use `Oak.demoPresenterMixin`
 
 ## Install the Polymer-CLI
 
 First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your element locally.
 
-## Viewing Your Element
-
 ```
 $ polymer serve
 ```
-
-## Running Tests
-
-```
-$ polymer test
-```
-
-Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
