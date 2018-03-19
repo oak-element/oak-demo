@@ -1,0 +1,36 @@
+<link rel="import" href="../oak-demo-snippet.html">
+
+<dom-module id="oak-demo-snippet-demo">
+    <template>
+        <oak-demo-snippet>
+            <template snippet>
+                <h3>This is a demonstration of simple binding:</h3>
+                <p><b>Demo title:</b> <i>[[demoTitle]]</i></p>
+                <p><b>Edit it:</b> <input type="text" value="{{demoTitle::change}}" /></p>
+                
+                <h3>This is a demonstration of a two way binding:</h3>
+                <p><input type="text" value="{{inputContent::change}}" /></p>
+                <p><input type="text" value="{{inputContent::change}}" /></p>
+                <button on-click="showMessageWithContent">Show a message</button>
+            </template>
+        </oak-demo-snippet>
+    </template>
+
+    <script>
+        class OakDemoSnippetDemo extends Oak.demoPresenterMixin(Polymer.Element) {
+            static get is() { return 'oak-demo-snippet-demo'; }
+            
+            static get properties() {
+                return {
+                    demoTitle: { type: String },
+                    inputContent: { type: String, value: "Some default value" }
+                };
+            }
+
+            showMessageWithContent(){
+                alert(this.inputContent);
+            }
+        }
+        window.customElements.define(OakDemoSnippetDemo.is, OakDemoSnippetDemo);
+    </script>
+</dom-module>

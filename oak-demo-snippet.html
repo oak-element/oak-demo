@@ -1,0 +1,113 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../marked-element/marked-element.html">
+<link rel="import" href="../prism-element/prism-highlighter.html">
+<link rel="import" href="../prism-element/prism-theme-default.html">
+<link rel="import" href="oak-demo-presenter-mixin.html">
+
+<dom-module id="oak-demo-snippet">
+  <template>
+    <style include="prism-theme-default">
+        :host {
+          display: block;
+          box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                      0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                      0 3px 1px -2px rgba(0, 0, 0, 0.2);
+          margin-bottom: 40px;
+        }
+  
+        .demo {
+          border-bottom: 1px solid #e0e0e0;
+          background: #fff;
+          padding: 20px;
+          @apply --oak-demo-snippet-demo;
+        }
+  
+        .code-container {
+          background-color: #f5f5f5;
+          padding: 0 20px;
+        }
+  
+        .code-html {
+          @apply --oak-demo-snippet-code;
+        }
+        .code > pre {
+          padding: 0 0 10px 0;
+        }
+    </style>
+
+    <prism-highlighter></prism-highlighter>
+
+    <div class="demo">
+      <slot id="content"></slot>
+    </div>
+
+    <div class="code-container">
+      <marked-element markdown="[[markdown]]" id="marked">
+        <div class="code-html" slot="markdown-html"></div>
+      </marked-element>
+    </div>
+  </template>
+
+  <script>
+    (function ({ Element }) {
+      class OakDemoSnippet extends Element {
+        static get is() { return "oak-demo-snippet"; }
+        
+        static get properties() {
+          return {
+            markdown: { type: String }
+          };
+        }
+
+        connectedCallback() {
+          super.connectedCallback();
+          this._observer = Polymer.dom(this.$.content)
+            .observeNodes(() => this._onContentReady());
+        }
+
+        unobserveContent() {
+          if (this._observer) {
+            Polymer.dom(this.$.content).unobserveNodes(this._observer);
+            this._observer = null;
+          }
+        }
+
+        disconnectedCallback() {
+          super.disconnectedCallback();
+          this.unobserveContent();
+        }
+
+        _onContentReady() {
+          const template = Polymer.dom(this).queryDistributedElements('template')[0];
+
+          if (!template) {
+            this.markdown = "";
+            return;
+          }
+
+          this.markdown = [
+            "```",
+            this.$.marked.unindent(template._templateInfo.snippet).replace(/=""/g, ''),
+            "```"
+          ].join("\n");
+
+          this.unobserveContent();
+
+          if (parent) {
+            const ctor = Polymer.Templatize.templatize(template, this, {
+              mutableData: true,
+              forwardHostProp: function (prop, value) {
+                if (this.__instance) {
+                  this.__instance.forwardHostProp(prop, value);
+                }
+              }
+            });
+            this.__instance = new ctor();
+            this.appendChild(this.__instance.root);
+          }
+        }
+      }
+      window.customElements.define(OakDemoSnippet.is, OakDemoSnippet);
+    })(Polymer)
+  </script>
+</dom-module>
