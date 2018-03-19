@@ -1,0 +1,22 @@
+<script>
+  var Oak;
+  (function (Oak) {
+    function demoPresenterMixin(baseClass) {
+      return class extends baseClass {
+        static _parseTemplateNode(node, templateInfo, nodeInfo) {
+          if (node.localName == "template" && node.hasAttribute("snippet")) {
+            const snippet = node.innerHTML;
+            if (super._parseTemplateNode(node, templateInfo, nodeInfo)) {
+              node._templateInfo.snippet = snippet;
+              return true;
+            }
+            return false;
+          }
+          return super._parseTemplateNode(node, templateInfo, nodeInfo);
+        }
+      }
+    }
+
+    Oak.demoPresenterMixin = demoPresenterMixin;
+  })(Oak || (Oak = {}));
+</script>
